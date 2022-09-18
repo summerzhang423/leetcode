@@ -1,0 +1,50 @@
+Table: Employees
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| employee_id | int     |
+| name        | varchar |
++-------------+---------+
+employee_id is the primary key for this table.
+Each row of this table indicates the name of the employee whose ID is employee_id.
+ 
+
+Table: Salaries
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| employee_id | int     |
+| salary      | int     |
++-------------+---------+
+employee_id is the primary key for this table.
+Each row of this table indicates the salary of the employee whose ID is employee_id.
+ 
+
+Write an SQL query to report the IDs of all the employees with missing information. The information of an 
+employee is missing if:
+
+The employee's name is missing, or
+The employee's salary is missing.
+Return the result table ordered by employee_id in ascending order.
+
+My Result 1: Using the method of union what's in table 1 but in table 2 and what's in table 2 but not in 
+table1
+
+SELECT employee_id FROM Employees WHERE employee_id NOT IN (SELECT employee_id FROM Salaries)
+UNION 
+SELECT employee_id FROM Salaries WHERE employee_id NOT IN (SELECT employee_id FROM Employees)
+ORDER BY 1 ASC;
+
+My result 2: use full outer join concept; filter out null values
+
+SELECT new_table.employee_id
+FROM
+       (SELECT * FROM Empployees LEFT JOIN Salaries USING(employee_id)
+	UNION 
+	SELECT * FROM Salaries RIGHT JOIN Employees USING(employee_id)) AS new_table
+WHERE new_table.name IS NULL OR new_table.salary IS NULL
+ORDER BY employee_id ASC;
+
+
